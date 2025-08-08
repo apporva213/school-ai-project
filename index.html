@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sky Heights Academy Chatbot</title>
+    <style>
+        :root {
+            --background-light: rgba(255, 255, 255, 0.9);
+            --background-dark: rgba(0, 0, 0, 0.85);
+            --text-light: #000;
+            --text-dark: #fff;
+            --chat-bg-light: rgba(255, 255, 255, 0.95);
+            --chat-bg-dark: rgba(30, 30, 30, 0.9);
+            --input-bg-light: #ffffff;
+            --input-bg-dark: #333333;
+            --input-text-light: #000000;
+            --input-text-dark: #f1f1f1;
+            --input-border-light: #ccc;
+            --input-border-dark: #444;
+            --message-text-dark: #e0e0e0;
+            --message-text-light: #000;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: url("https://www.yayskool.com/images/school/sky-heights-academy-indore-65497533.jpg") no-repeat center center fixed;
+            background-size: cover;
+            background-blend-mode: overlay;
+            background-color: var(--background-light);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+
+        body.dark-theme {
+            background-color: var(--background-dark);
+            color: var(--text-dark);
+        }
+
+        .chat-container {
+            width: 90%;
+            max-width: 800px;
+            background: var(--chat-bg-light);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+
+        body.dark-theme .chat-container {
+            background: var(--chat-bg-dark);
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            padding: 5px 10px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 18px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-toggle:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+
+        body.dark-theme .theme-toggle {
+            background-color: #333;
+            color: #f1f1f1;
+        }
+
+        body.dark-theme .theme-toggle:hover {
+            background-color: #555;
+        }
+
+        .chat-history {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: var(--chat-bg-light);
+            padding: 10px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        body.dark-theme .chat-history {
+            background: var(--chat-bg-dark);
+        }
+
+        .chat-message {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .chat-message img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .message-text {
+            background: #e6e6e6;
+            border-radius: 10px;
+            padding: 10px;
+            max-width: 75%;
+            word-wrap: break-word;
+        }
+
+        .user .message-text {
+            background: #d1e7ff;
+            align-self: flex-end;
+        }
+
+        .bot .message-text {
+            background: #d9f7be;
+        }
+
+        body.dark-theme .user .message-text,
+        body.dark-theme .bot .message-text {
+            color: var(--message-text-light);
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        body.dark-theme .message-time {
+            color: var(--message-text-dark);
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .voice-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px; /* Space between mic button and input */
+        }
+
+        .voice-btn img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--input-border-light);
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: var(--input-bg-light);
+            color: var(--input-text-light);
+        }
+
+        body.dark-theme .chat-input {
+            background-color: var(--input-bg-dark);
+            color: var(--input-text-dark);
+            border: 1px solid var(--input-border-dark);
+        }
+
+        .send-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .send-btn:hover {
+            background: #0056b3;
+        }
+
+        #loadingText {
+            text-align: center;
+            margin-bottom: 10px; /* Adds space between loading text and chatbox */
+            font-weight: bold;
+            font-size: 16px;
+            color: #555; /* Default text color */
+            display: block; /* Ensures it spans full width */
+            width: 100%; /* Centers content within the container */
+        }
+
+        body.dark-theme #loadingText {
+            color: #ddd; /* Text color in dark theme */
+        }
+
+
+        .download-chat {
+            margin-top: 5px;
+            background: pink;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 13px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .download-chat:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <center><img src="https://skyheightsacademy.com/wp-content/uploads/2016/06/logo.png" alt="Description of the image"></center>
+        <h1>SKY HEIGHTS ACADEMY</h1>
+    </header>
+
+
+
+<div class="chat-container">
+    <div class="chat-header">
+        <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    </div>
+    <div class="chat-history" id="chatHistory"></div>
+    <div id="loadingText" class="loading-text"></div>
+    <div class="input-container">
+        <button class="voice-btn" onclick="startVoiceRecognition()">
+            <img src="https://cdn0.iconfinder.com/data/icons/social-messaging-ui-color-shapes-3/3/83-1024.png" alt="Microphone">
+        </button>
+        <input
+            type="text"
+            id="question"
+            class="chat-input"
+            placeholder="Type your question..."
+            onkeydown="checkEnter(event)"
+        />
+        <button class="send-btn" onclick="askQuestion()">Send</button>
+    </div>
+</div>
+
+
+    <script>
+        let chatHistoryArray = [];
+
+        function toggleTheme() {
+            document.body.classList.toggle("dark-theme");
+            const toggleButton = document.querySelector('.theme-toggle');
+            toggleButton.textContent = document.body.classList.contains("dark-theme") ? '🌞' : '🌙'; // Change icon on toggle
+        }
+
+        async function askQuestion() {
+            const questionInput = document.getElementById("question");
+            const question = questionInput.value.trim();
+            if (!question) return;
+
+            const chatHistory = document.getElementById("chatHistory");
+            const messageId = Date.now();
+            const timestamp = new Date().toLocaleTimeString();
+
+            chatHistory.innerHTML += `
+                <div class="chat-message user">
+                    <img src="https://cdn0.iconfinder.com/data/icons/kameleon-free-pack-rounded/110/Student-3-1024.png" alt="User">
+                    <div>
+                        <div class="message-text">${question}</div>
+                        <div class="message-time">${timestamp}</div>
+                    </div>
+                </div>
+                <div class="chat-message bot" id="botMessage-${messageId}">
+                    <img src="https://skyheightsacademy.com/wp-content/uploads/2016/06/logo.png" alt="Bot">
+                    <div>
+                        <div class="message-text">...</div>
+                        <div class="message-time">${timestamp}</div>
+                    </div>
+                </div>
+            `;
+
+            chatHistoryArray.push(`You: ${question}`);
+            document.getElementById("loadingText").textContent = "generating text...";
+
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question }),
+                });
+
+                const data = await response.json();
+                const botMessageElement = document.getElementById(`botMessage-${messageId}`);
+                botMessageElement.querySelector(".message-text").textContent = data.response;
+                chatHistoryArray.push(`Bot: ${data.response}`);
+                speakText(data.response);
+            } catch (error) {
+                alert("Error: " + error.message);
+            } finally {
+                questionInput.value = "";
+                document.getElementById("loadingText").textContent = "";
+            }
+        }
+
+        function startVoiceRecognition() {
+            document.getElementById("loadingText").textContent = "Listening...";
+
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+
+            recognition.onresult = async function(event) {
+                const question = event.results[0][0].transcript;
+                document.getElementById("question").value = question;
+                await askQuestion();
+            };
+
+            recognition.onerror = function() {
+                alert("Voice recognition failed. Please try again.");
+            };
+
+            recognition.onend = function() {
+                document.getElementById("loadingText").textContent = "";
+            };
+
+            recognition.start();
+        }
+
+        function checkEnter(event) {
+            if (event.key === "Enter") askQuestion();
+        }
+
+        function speakText(text) {
+            const speechSynthesis = window.speechSynthesis;
+            const speech = new SpeechSynthesisUtterance(text);
+            speech.lang = "en-US";
+            speechSynthesis.speak(speech);
+        }
+
+        function downloadChat() {
+            const chatText = chatHistoryArray.join("\n");
+            const blob = new Blob([chatText], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'chat_history.txt';
+            link.click();
+        }
+
+    </script>
+</body>
+</html>
