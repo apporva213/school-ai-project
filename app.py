@@ -8,7 +8,7 @@ import re
 import webbrowser
 from werkzeug.utils import secure_filename
 # google generative ai ka api yaha dale
-genai.configure(api_key="AIzaSyDIukcP1wQHnwKWb2w5DLUgMaAjX16NeJ0")
+genai.configure(api_key="add yours")
 
 # Model setup
 generation_config = {
@@ -422,4 +422,5 @@ def voice_input():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
 
